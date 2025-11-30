@@ -1,0 +1,128 @@
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Hero } from './components/Hero';
+import { DestinationCard } from './components/DestinationCard';
+import { BookingModal } from './components/BookingModal';
+import { ImportantInfo } from './components/ImportantInfo';
+import { ChatWidget } from './components/ChatWidget';
+import { Footer } from './components/Footer';
+import { DESTINATIONS } from './constants';
+import { Destination } from './types';
+
+const App: React.FC = () => {
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (bgRef.current) {
+        // Switch to scale effect for "volume".
+        // Translating Y moves the background off-screen on long pages.
+        // Scaling slightly (zooming in) creates depth while keeping coverage.
+        const scrollProgress = window.scrollY;
+        const scale = 1 + (scrollProgress * 0.00015); 
+        
+        bgRef.current.style.transform = `scale(${scale})`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleBook = (id: string) => {
+    const dest = DESTINATIONS.find(d => d.id === id);
+    if (dest) {
+      setSelectedDestination(dest);
+      setIsModalOpen(true);
+    }
+  };
+
+  const scrollToDestinations = () => {
+    const element = document.getElementById('destinations');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Global Fixed Background */}
+      <div className="fixed inset-0 z-0">
+        <div 
+          ref={bgRef}
+          className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-100 ease-linear will-change-transform"
+          style={{ 
+            // User provided background image
+            backgroundImage: "url('https://sun9-51.userapi.com/s/v1/ig2/mLfSaPO6Oj2f4v48G8PE8M1mAM7Pgpjvkm0LHwUS03BxH1T1X5ET6CQK7maM-08ZcFuQpVkb-xrW5tVqjo4XDyEv.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x240,480x320,540x360,640x426,720x480,1080x720,1280x853,1440x959,1600x1066&from=bu&cs=1600x0')",
+            transformOrigin: 'center 40%' 
+          }}
+        >
+          {/* Global Dark Overlay for readability */}
+          <div className="absolute inset-0 bg-slate-900/60"></div>
+        </div>
+      </div>
+
+      {/* Header/Nav Overlay */}
+      <nav className="absolute top-0 w-full z-50 p-6 flex justify-between items-center">
+        <div className="h-12 sm:h-14">
+          <img 
+            src="https://sun9-84.userapi.com/s/v1/ig2/sO06I8kDb8j63jDF8y5xTwK3xxr2KuFmVHJSnghSR20lApJh6nIb1KGjCLIRYloFa54Rb-4WPe-Cgts8KR1l4_sb.jpg?quality=95&as=32x16,48x24,72x36,108x54,160x80,240x120,360x180,480x240,540x270,640x320,720x360,1080x540,1280x640,1440x720,2560x1280&from=bu&cs=2560x0" 
+            alt="Active Travel" 
+            className="h-full w-auto object-contain rounded-full mix-blend-screen contrast-125 brightness-110"
+          />
+        </div>
+        <a 
+          href="tel:+79180000000" 
+          className="text-white font-medium px-4 py-2 border border-white/30 rounded-full hover:bg-white/10 transition-colors backdrop-blur-sm"
+        >
+          +7 (918) 000-00-00
+        </a>
+      </nav>
+
+      {/* Scrollable Content Wrapper */}
+      <div className="relative z-10 w-full">
+        <Hero onExplore={scrollToDestinations} />
+
+        {/* Destinations Section */}
+        <section id="destinations" className="py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <span className="text-sky-400 font-bold tracking-wider uppercase text-sm">Выбирай сердцем</span>
+              <h2 className="mt-2 text-4xl md:text-5xl font-serif font-bold text-white drop-shadow-lg">Популярные направления</h2>
+              <div className="w-24 h-1 bg-sky-500 mx-auto mt-6 rounded-full shadow-lg"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+              {DESTINATIONS.map((destination) => (
+                <DestinationCard 
+                  key={destination.id} 
+                  destination={destination} 
+                  onBook={handleBook} 
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Bottom sections */}
+        <div className="relative z-20">
+          <ImportantInfo />
+          <Footer />
+        </div>
+      </div>
+
+      {/* Floating Elements */}
+      <ChatWidget />
+      
+      <BookingModal 
+        destination={selectedDestination} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+    </div>
+  );
+};
+
+export default App;
