@@ -10,7 +10,6 @@ export interface Destination {
   description: string;
   price: number; // in RUB
   duration: string;
-  difficulty: 'Легкий' | 'Средний' | 'Сложный';
   images: string[];
   features: string[];
   weather: Weather;

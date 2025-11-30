@@ -8,7 +8,6 @@ export const DESTINATIONS: Destination[] = [
     description: 'Домбай — это легендарный курорт, окруженный ледниками и пихтовыми лесами. Вас ждут захватывающие виды с горы Мусса-Ачитара, древние аланские храмы и мощные водопады. Идеально для тех, кто хочет увидеть "классический" Кавказ.',
     price: 15000,
     duration: '3 дня / 2 ночи',
-    difficulty: 'Легкий',
     images: [
       'https://sun9-54.userapi.com/s/v1/ig2/AyL4af2V1T4aeSgv0ea3AVFGwQ5ZHCysy4VumIHyebTiEHHA2Ux-JoJ9VfwuAFMvzIn4JC3E3xmLqE34I3WPOSD2.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1218x1624&from=bu&cs=1218x0',
       'https://sun9-70.userapi.com/s/v1/ig1/8TRsKy87ZhJ4IVSdscBlfX5OpkxQIbW-lre2Y-KSlOrKdjAeME7rIQcpzLaovDWrTG4VhFWy.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1218x1624&from=bu&cs=1218x0',
@@ -24,7 +23,6 @@ export const DESTINATIONS: Destination[] = [
     description: 'Архыз славится своим кристально чистым воздухом и крупнейшей обсерваторией. Это место силы с Софийскими водопадами и высокогорными озерами невероятной бирюзы.',
     price: 16500,
     duration: '3 дня / 2 ночи',
-    difficulty: 'Средний',
     images: [
       'https://sun9-68.userapi.com/s/v1/ig2/lNSYKGZvomJWqbKQC6buDM1iEazFRFmuPc2sIGA4hcQyBlVVPn7EMFe9xOgeN2h5qhSLQwx9v6wl8UhBdTaZ8BSI.jpg?quality=95&as=32x23,48x34,72x51,108x77,160x113,240x170,360x255,480x340,540x383,640x454,720x511,1080x766,1280x908,1440x1021,1600x1135&from=bu&cs=1600x0',
       'https://sun9-45.userapi.com/s/v1/ig2/x_QVVp9zZXKgS-CD6RwxOtcPn-HZuplsLfnqPNF70v3vvncG7Jm75_J0d_lD1lLT9nn4RrHLWldz5w8KHlVh7ZUA.jpg?quality=96&as=32x31,48x47,72x71,108x106,160x157,240x236,360x354,480x472,540x531,640x630,720x709,1080x1063&from=bu&cs=1080x0',
@@ -42,7 +40,6 @@ export const DESTINATIONS: Destination[] = [
     description: 'Почувствуйте величие самой высокой горы Европы. Мы поднимемся на канатной дороге до станции Гара-Баши (3847м), увидим водопад Девичьи Косы и насладимся нарзанами.',
     price: 18000,
     duration: '3 дня / 2 ночи',
-    difficulty: 'Средний',
     images: [
       'https://sun9-9.userapi.com/s/v1/ig2/NZXrxSUxd4P8G6WJcG6XNczLPIKSIefZ7tgxh7b0JR5yvY2-VDOV9zznW0cil6KVWNIFTtf6RzFtdDRZElDq19pN.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,960x1280&from=bu&cs=960x0',
       'https://sun9-88.userapi.com/s/v1/ig2/FU_xBbG0QjVwpXq3KwqLsNRtd7u7QUFLqpJ87kNqQ1jZ7qm20avZLaEahlv3Ir0SClfFo_Ds4pEslgTlrdpW8Y7G.jpg?quality=96&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,853x853&from=bu&cs=853x0',
@@ -58,7 +55,6 @@ export const DESTINATIONS: Destination[] = [
     description: 'Ближайшие к Краснодару горы. Уникальное плато с карстовыми пещерами, цветущими альпийскими лугами и панорамными смотровыми площадками.',
     price: 9000,
     duration: '2 дня / 1 ночь',
-    difficulty: 'Легкий',
     images: [
       'https://images.unsplash.com/photo-1610967339798-25f385c9a440?auto=format&fit=crop&q=80&w=800',
       'https://images.unsplash.com/photo-1587391807775-6b583713063f?auto=format&fit=crop&q=80&w=800',
@@ -74,7 +70,6 @@ export const DESTINATIONS: Destination[] = [
     description: 'Самый удаленный и дикий уголок Северной Осетии. Вековые башни, гигантские водопады и отсутствие толп туристов. Для истинных ценителей тишины.',
     price: 22000,
     duration: '4 дня / 3 ночи',
-    difficulty: 'Сложный',
     images: [
       'https://images.unsplash.com/photo-1598289895287-63df77488f75?auto=format&fit=crop&q=80&w=800',
       'https://images.unsplash.com/photo-1614088012674-722138c2323a?auto=format&fit=crop&q=80&w=800',

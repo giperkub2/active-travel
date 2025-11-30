@@ -156,10 +156,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
             </span>
           </div>
 
-          {/* Difficulty Badge */}
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-sky-800 shadow-sm uppercase tracking-wider">
-            {destination.difficulty}
-          </div>
+          {/* Difficulty Badge removed here */}
           
           {/* Dots indicator */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5">
