@@ -7,12 +7,12 @@ export const Footer: React.FC = () => {
     <footer className="bg-black/60 backdrop-blur-lg text-slate-300 py-12 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
         <div>
-          <h3 className="text-2xl font-serif font-bold text-white mb-4">Вершины Кавказа</h3>
+          <h3 className="text-2xl font-serif font-bold text-white mb-4">Active Travel</h3>
           <p className="text-sm leading-relaxed text-slate-300 mb-6">
             Организуем душевные путешествия в горы с 2015 года. Показываем настоящий Кавказ с любовью и заботой о комфорте.
           </p>
           <div className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} Caucasus Peaks. Все права защищены.
+            &copy; {new Date().getFullYear()} Active Travel. Все права защищены.
           </div>
         </div>
 

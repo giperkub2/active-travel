@@ -76,7 +76,7 @@ export const ChatWidget: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold text-sm">AI Гид</h4>
-                <p className="text-xs text-sky-200">Вершины Кавказа</p>
+                <p className="text-xs text-sky-200">Active Travel</p>
               </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="text-white/60 hover:text-white">

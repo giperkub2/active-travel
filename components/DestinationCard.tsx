@@ -20,6 +20,12 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
+const VKIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.624 20.374c-5.786 0-9.096-4.072-9.256-10.974h2.894c.106 5.044 2.278 7.189 4.022 7.63V12.78c-2.484-.282-3.69-2.115-4.29-4.07h2.78c.459 1.957 1.764 3.753 3.385 3.753h.53V9.4h2.646v1.94c0.812-.088 1.677-1.11 2.277-2.63h2.647c-0.67 2.646-3.033 4.886-3.563 5.345 2.152.6 3.652 2.91 4.146 5.32h-2.91c-0.847-2.61-2.928-4.053-4.322-4.14v4.14h-1.006z"/>
+  </svg>
+);
+
 export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, onBook }) => {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -94,10 +100,15 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     setCurrentImageIdx((prev) => (prev - 1 + destination.images.length) % destination.images.length);
   };
 
-  const handleShare = (platform: 'telegram' | 'whatsapp') => {
+  const handleShare = (platform: 'telegram' | 'whatsapp' | 'vk') => {
     const url = window.location.origin + window.location.pathname + '#' + destination.id;
     const text = `Посмотрите этот тур: ${destination.title} - ${destination.price.toLocaleString('ru-RU')}₽!`;
     
+    if (platform === 'vk') {
+      window.open('https://vk.com/activetravel_krd', '_blank');
+      return;
+    }
+
     let shareUrl = '';
     if (platform === 'telegram') {
         shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
@@ -155,8 +166,6 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
               {currentWeather.condition}
             </span>
           </div>
-
-          {/* Difficulty Badge removed here */}
           
           {/* Dots indicator */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5">
@@ -210,6 +219,13 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
 
             <div className="flex items-center justify-center space-x-4 pt-2 border-t border-slate-100">
               <span className="text-xs text-slate-400 uppercase tracking-wide font-medium">Поделиться:</span>
+              <button 
+                onClick={() => handleShare('vk')}
+                className="p-2 rounded-full text-slate-400 hover:text-[#0077FF] hover:bg-[#0077FF]/10 transition-colors duration-200"
+                aria-label="ВКонтакте"
+              >
+                <VKIcon />
+              </button>
               <button 
                 onClick={() => handleShare('telegram')}
                 className="p-2 rounded-full text-slate-400 hover:text-[#0088cc] hover:bg-[#0088cc]/10 transition-colors duration-200"

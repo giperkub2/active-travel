@@ -26,9 +26,7 @@ export const DESTINATIONS: Destination[] = [
     images: [
       'https://sun9-68.userapi.com/s/v1/ig2/lNSYKGZvomJWqbKQC6buDM1iEazFRFmuPc2sIGA4hcQyBlVVPn7EMFe9xOgeN2h5qhSLQwx9v6wl8UhBdTaZ8BSI.jpg?quality=95&as=32x23,48x34,72x51,108x77,160x113,240x170,360x255,480x340,540x383,640x454,720x511,1080x766,1280x908,1440x1021,1600x1135&from=bu&cs=1600x0',
       'https://sun9-45.userapi.com/s/v1/ig2/x_QVVp9zZXKgS-CD6RwxOtcPn-HZuplsLfnqPNF70v3vvncG7Jm75_J0d_lD1lLT9nn4RrHLWldz5w8KHlVh7ZUA.jpg?quality=96&as=32x31,48x47,72x71,108x106,160x157,240x236,360x354,480x472,540x531,640x630,720x709,1080x1063&from=bu&cs=1080x0',
-      'https://sun9-77.userapi.com/s/v1/ig2/-dYUUfI03C28MndDGnJko1hd2NVu678szqDVdaCtqMKjeiXoGSEpsSzPoY5WP5O921ggW3_e24GHEKYUhk_WLuUD.jpg?quality=96&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,682x682&from=bu&cs=682x0',
-      'https://images.unsplash.com/photo-1596395986873-10e8d087790e?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1574510348782-b7e908a8292d?auto=format&fit=crop&q=80&w=800'
+      'https://sun9-77.userapi.com/s/v1/ig2/-dYUUfI03C28MndDGnJko1hd2NVu678szqDVdaCtqMKjeiXoGSEpsSzPoY5WP5O921ggW3_e24GHEKYUhk_WLuUD.jpg?quality=96&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,682x682&from=bu&cs=682x0'
     ],
     features: ['Софийские водопады', 'Лик Христа', 'Рафтинг'],
     weather: { temp: 15, condition: 'Солнечно' },
@@ -82,7 +80,7 @@ export const DESTINATIONS: Destination[] = [
 ];
 
 export const SYSTEM_INSTRUCTION = `
-Ты — опытный горный гид компании "Вершины Кавказа". Твоя цель — помогать пользователям выбирать туры из Краснодара.
+Ты — опытный горный гид компании "Active Travel". Твоя цель — помогать пользователям выбирать туры из Краснодара.
 Твой тон: дружелюбный, вдохновляющий, но профессиональный.
 Используй информацию о направлениях: Домбай, Архыз, Приэльбрусье, Лаго-Наки, Дигория.
 Все туры стартуют из Краснодара. Трансфер включен.
