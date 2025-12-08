@@ -33,10 +33,9 @@ export const Hero: React.FC<HeroProps> = ({ onExplore }) => {
           <div>
             <button 
               onClick={onExplore}
-              className="group relative inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white transition-all duration-200 bg-sky-600 rounded-full hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600 shadow-lg hover:shadow-sky-500/30"
+              className="group relative inline-flex items-center justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-sky-600 rounded-full hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600 shadow-lg hover:shadow-sky-500/30"
             >
               Выбрать путешествие
-              <ArrowDown className="ml-2 w-4 h-4 group-hover:translate-y-1 transition-transform" />
             </button>
           </div>
         </div>
