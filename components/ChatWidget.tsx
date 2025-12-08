@@ -68,10 +68,10 @@ export const ChatWidget: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-[calc(100vw-3rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col animate-fade-in-up h-[500px] max-h-[60vh] sm:max-h-[500px]">
+        <div className="mb-4 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col animate-fade-in-up h-[500px] max-h-[60vh] sm:max-h-[500px]">
           {/* Header */}
           <div className="bg-slate-900 p-4 flex justify-between items-center">
             <div className="flex items-center text-white">
@@ -141,9 +141,9 @@ export const ChatWidget: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="group flex items-center justify-center w-14 h-14 bg-sky-600 text-white rounded-full shadow-lg hover:bg-sky-700 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-sky-300"
+          className="group flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-sky-600 text-white rounded-full shadow-lg hover:bg-sky-700 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-sky-300"
         >
-          <MessageSquare size={24} className="group-hover:animate-pulse" />
+          <MessageSquare size={20} className="sm:w-6 sm:h-6 group-hover:animate-pulse" />
         </button>
       )}
     </div>
