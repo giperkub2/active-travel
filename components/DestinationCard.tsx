@@ -40,10 +40,10 @@ const RainEffect = () => {
   const drops = useMemo(() => {
     return [...Array(15)].map((_, i) => ({
       left: Math.random() * 100,
-      width: Math.random() * 8 + 6, // 6px to 14px
-      height: Math.random() * 8 + 6, 
+      width: Math.random() * 6 + 4, // Slightly smaller width for drop shape
+      height: Math.random() * 6 + 4, 
       delay: Math.random() * 2,
-      duration: Math.random() * 2 + 3
+      duration: (Math.random() * 2 + 3) * 1.5 // Increased duration (slower)
     }));
   }, []);
 
@@ -72,9 +72,9 @@ const SnowEffect = () => {
   const flakes = useMemo(() => {
     return [...Array(30)].map((_, i) => ({
       left: Math.random() * 100,
-      size: Math.random() * 4 + 2, // 2px to 6px
+      size: Math.random() * 12 + 10, // Font size for snowflake (10px to 22px)
       delay: Math.random() * 5,
-      duration: Math.random() * 3 + 4
+      duration: (Math.random() * 3 + 4) * 1.5 // Increased duration (slower)
     }));
   }, []);
 
@@ -86,12 +86,11 @@ const SnowEffect = () => {
           className="snowflake"
           style={{
             left: `${flake.left}%`,
-            width: `${flake.size}px`,
-            height: `${flake.size}px`,
+            fontSize: `${flake.size}px`,
             animationDelay: `${flake.delay}s`,
             animationDuration: `${flake.duration}s`
           }}
-        />
+        >❄</div>
       ))}
     </div>
   );
