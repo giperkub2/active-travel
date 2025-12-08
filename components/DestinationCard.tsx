@@ -63,14 +63,14 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     return () => observer.disconnect();
   }, []);
 
-  // Fetch real-time weather forecast (5 days)
+  // Fetch real-time weather forecast (10 days)
   useEffect(() => {
     if (destination.coordinates) {
       const fetchWeather = async () => {
         try {
-          // Fetching daily forecast for 5 days
+          // Fetching daily forecast for 10 days
           const res = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${destination.coordinates.lat}&longitude=${destination.coordinates.lng}&daily=weathercode,temperature_2m_max&timezone=auto&forecast_days=5`
+            `https://api.open-meteo.com/v1/forecast?latitude=${destination.coordinates.lat}&longitude=${destination.coordinates.lng}&daily=weathercode,temperature_2m_max&timezone=auto&forecast_days=10`
           );
           if (!res.ok) throw new Error('Failed to fetch weather');
           const data = await res.json();
@@ -208,22 +208,27 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
             <ChevronRight size={20} />
           </button>
 
-          {/* 5-Day Weather Forecast Widget */}
+          {/* 10-Day Weather Forecast Widget (Compact) */}
           {forecast.length > 0 ? (
-             <div className="absolute top-4 left-4 right-4 sm:right-auto bg-white/80 backdrop-blur-md rounded-xl p-2 shadow-lg border border-white/50 flex justify-between sm:justify-start sm:gap-3 overflow-x-auto hide-scrollbar pointer-events-none">
+             <div 
+                className="absolute top-4 left-4 right-4 sm:right-auto max-w-[90%] sm:max-w-[200px] bg-white/80 backdrop-blur-md rounded-xl p-1.5 shadow-lg border border-white/50 flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-10"
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+             >
                 {forecast.map((day, idx) => (
-                  <div key={idx} className="flex flex-col items-center justify-between min-w-[40px] text-center">
-                    <span className="text-[10px] uppercase font-bold text-slate-500 leading-none mb-1">{day.dayOfWeek}</span>
-                    <span className="text-[9px] text-slate-400 leading-none mb-1">{day.dayNumber}</span>
+                  <div key={idx} className="flex flex-col items-center justify-between min-w-[34px] text-center">
+                    <span className="text-[9px] uppercase font-bold text-slate-500 leading-none mb-0.5">{day.dayOfWeek}</span>
+                    <span className="text-[8px] text-slate-400 leading-none mb-0.5">{day.dayNumber}</span>
                     <div className="my-0.5">
-                      {getWeatherIcon(day.code, "w-4 h-4")}
+                      {getWeatherIcon(day.code, "w-3.5 h-3.5")}
                     </div>
-                    <span className="text-xs font-bold text-slate-700 leading-none">{day.tempMax > 0 ? '+' : ''}{day.tempMax}°</span>
+                    <span className="text-[10px] font-bold text-slate-700 leading-none">{day.tempMax > 0 ? '+' : ''}{day.tempMax}°</span>
                   </div>
                 ))}
              </div>
           ) : (
-            // Fallback to single static weather if API fails
+            // Fallback
             <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/50 pointer-events-none">
               {getWeatherIcon(0)} 
               <span className="text-sm">{destination.weather.temp > 0 ? '+' : ''}{destination.weather.temp}°C</span>
