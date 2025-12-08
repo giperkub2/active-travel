@@ -42,4 +42,38 @@ export const DESTINATIONS: Destination[] = [
     price: 18000,
     duration: '3 дня / 2 ночи',
     images: [
-      'https://sun9-9.userapi.com/s/v1/ig2/NZXrxSUxd4P8G6WJcG6XNczLPIKSIefZ7tgxh7b0JR5yvY2-VDOV9zznW0cil6KVWNIFTtf6Rz
+      'https://sun9-9.userapi.com/s/v1/ig2/NZXrxSUxd4P8G6WJcG6XNczLPIKSIefZ7tgxh7b0JR5yvY2-VDOV9zznW0cil6KVWNIFTtf6RzFtdDRZElDq19pN.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,960x1280&from=bu&cs=960x0',
+      'https://sun9-88.userapi.com/s/v1/ig2/FU_xBbG0QjVwpXq3KwqLsNRtd7u7QUFLqpJ87kNqQ1jZ7qm20avZLaEahlv3Ir0SClfFo_Ds4pEslgTlrdpW8Y7G.jpg?quality=96&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,853x853&from=bu&cs=853x0',
+      'https://sun9-1.userapi.com/s/v1/ig2/s3srA5-VDAHjJ7n50rVuNPR8bg6mzdf5N6lhV9N1HDVyVDuyQWALE2hM5G7-BlkHWnlGqQXzjSi6QgVgYcjLvTHm.jpg?quality=96&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,884x884&from=bu&cs=884x0'
+    ],
+    features: ['Эльбрус (3847м)', 'Поляна Нарзанов', 'Озеро Гижгит'],
+    weather: { temp: -2, condition: 'Снег' },
+    coordinates: { lat: 43.2500, lng: 42.5000 }
+  },
+  {
+    id: 'lago-naki',
+    title: 'Лаго-Наки: Альпийские Луга',
+    description: 'Ближайшие к Краснодару горы. Уникальное плато с карстовыми пещерами, цветущими альпийскими лугами и панорамными смотровыми площадками.',
+    price: 9000,
+    duration: '2 дня / 1 ночь',
+    images: [
+      'https://i.ytimg.com/vi/n2g5vHgKfw8/maxresdefault.jpg',
+      'https://sochi.verticalshop.ru/upload/medialibrary/db8/db81f82c561ea0c6c8ee015140736b8f.jpg',
+      'https://imcdn.bolshayastrana.com/1200x410/BS_0c98b82abcbcdb93b5c498dbafd6532b29e9059ed1b6854928755ebb6c7cff7c.jpeg',
+      'https://static.tildacdn.com/tild6437-6235-4265-b935-626534633137/IMG20230211130404.jpg'
+    ],
+    features: ['Большая Азишская пещера', 'Хаджохская теснина', 'Термальные источники'],
+    weather: { temp: 18, condition: 'Ясно' },
+    coordinates: { lat: 44.0772, lng: 40.0039 }
+  }
+];
+
+export const SYSTEM_INSTRUCTION = `
+Ты — опытный горный гид компании "Active Travel". Твоя цель — помогать пользователям выбирать туры из Краснодара.
+Твой тон: дружелюбный, вдохновляющий, но профессиональный.
+Используй информацию о направлениях: Домбай, Архыз, Приэльбрусье, Лаго-Наки.
+Все туры стартуют из Краснодара. Трансфер включен.
+Если спрашивают про цену, называй примерные цены из списка (Лаго-Наки ~9к, Домбай ~15к, Архыз ~16.5к, Эльбрус ~18к).
+Акцентируй внимание на безопасности и красоте природы.
+Отвечай кратко и по делу, на русском языке.
+`;
