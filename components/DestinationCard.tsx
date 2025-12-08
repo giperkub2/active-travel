@@ -211,7 +211,13 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           {/* 10-Day Weather Forecast Widget (Compact) */}
           {forecast.length > 0 ? (
              <div 
-                className="absolute top-4 left-4 right-4 sm:right-auto max-w-[90%] sm:max-w-[200px] bg-white/80 backdrop-blur-md rounded-xl p-1.5 shadow-lg border border-white/50 flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-10"
+                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] bg-white/30 backdrop-blur-md rounded-xl p-1.5 shadow-lg border border-white/20 flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-10"
+                style={{
+                  maskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent), linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent), linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent)',
+                  maskComposite: 'intersect',
+                  WebkitMaskComposite: 'source-in'
+                }}
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -229,7 +235,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
              </div>
           ) : (
             // Fallback
-            <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/50 pointer-events-none">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/20 pointer-events-none">
               {getWeatherIcon(0)} 
               <span className="text-sm">{destination.weather.temp > 0 ? '+' : ''}{destination.weather.temp}°C</span>
               <span className="hidden sm:inline-block text-slate-500 font-normal border-l border-slate-200 pl-2 ml-0.5">
