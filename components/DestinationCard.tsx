@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Destination, Weather } from '../types';
 import { Clock, Mountain, ChevronLeft, ChevronRight, CheckCircle, Sun, Cloud, CloudRain, CloudSnow } from 'lucide-react';
 
@@ -34,11 +34,104 @@ const VKIcon = () => (
   </svg>
 );
 
+// Weather Effect Components
+const RainEffect = () => {
+  // Generate random drops
+  const drops = useMemo(() => {
+    return [...Array(15)].map((_, i) => ({
+      left: Math.random() * 100,
+      width: Math.random() * 8 + 6, // 6px to 14px
+      height: Math.random() * 8 + 6, 
+      delay: Math.random() * 2,
+      duration: Math.random() * 2 + 3
+    }));
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
+      {/* Light Blur backdrop to simulate looking through wet glass */}
+      <div className="absolute inset-0 backdrop-blur-[1px] opacity-30"></div>
+      {drops.map((drop, i) => (
+        <div
+          key={i}
+          className="raindrop"
+          style={{
+            left: `${drop.left}%`,
+            width: `${drop.width}px`,
+            height: `${drop.height}px`,
+            animationDelay: `${drop.delay}s`,
+            animationDuration: `${drop.duration}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+const SnowEffect = () => {
+  const flakes = useMemo(() => {
+    return [...Array(30)].map((_, i) => ({
+      left: Math.random() * 100,
+      size: Math.random() * 4 + 2, // 2px to 6px
+      delay: Math.random() * 5,
+      duration: Math.random() * 3 + 4
+    }));
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
+       {flakes.map((flake, i) => (
+        <div
+          key={i}
+          className="snowflake"
+          style={{
+            left: `${flake.left}%`,
+            width: `${flake.size}px`,
+            height: `${flake.size}px`,
+            animationDelay: `${flake.delay}s`,
+            animationDuration: `${flake.duration}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, onBook }) => {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [forecast, setForecast] = useState<DailyForecast[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Parallax State
+  const [parallaxOffset, setParallaxOffset] = useState({ x: 0, y: 0 });
+  
+  // Determine current weather condition code
+  // Priority: 1. API Forecast for today (index 0), 2. Static Data
+  const currentWeatherCode = useMemo(() => {
+    if (forecast.length > 0) return forecast[0].code;
+    
+    // Fallback mapping from string description to approx code if API failed
+    const cond = destination.weather.condition.toLowerCase();
+    if (cond.includes('дождь')) return 61;
+    if (cond.includes('снег')) return 71;
+    if (cond.includes('ясно') || cond.includes('солнечно')) return 0;
+    if (cond.includes('облачно')) return 3;
+    return 0; // Default clear
+  }, [forecast, destination.weather.condition]);
+
+  // Determine Animation Mode
+  const animationMode = useMemo(() => {
+    const code = currentWeatherCode;
+    // Rain: 51-67, 80-82, 95-99
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95) return 'rain';
+    // Snow: 71-77, 85-86
+    if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return 'snow';
+    // Clear/Parallax: 0, 1, 2, 3 (Including cloudy as calm/clear for parallax effect)
+    if (code <= 3 || code === 45 || code === 48) return 'parallax';
+    
+    return 'none';
+  }, [currentWeatherCode]);
 
   // Swipe state
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -90,13 +183,32 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           }
         } catch (error) {
           console.error('Error fetching weather:', error);
-          // Fallback handled by empty forecast array (UI will just not show or show static)
         }
       };
       
       fetchWeather();
     }
   }, [destination.coordinates]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (animationMode !== 'parallax') return;
+    
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
+    
+    // Move image opposite to mouse
+    setParallaxOffset({
+      x: x * -20, // max move 10px
+      y: y * -20
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (animationMode === 'parallax') {
+      setParallaxOffset({ x: 0, y: 0 });
+    }
+  };
 
   const nextImage = (e?: React.MouseEvent | React.TouchEvent) => {
     e?.stopPropagation();
@@ -151,25 +263,14 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
   };
 
   const getWeatherIcon = (code: number, className: string = "w-4 h-4") => {
-    // WMO codes
-    // 0: Clear sky
-    // 1, 2, 3: Mainly clear, partly cloudy, and overcast
-    // 45, 48: Fog
-    // 51, 53, 55: Drizzle
-    // 61, 63, 65: Rain
-    // 71, 73, 75: Snow
-    // 80, 81, 82: Rain showers
-    // 95, 96, 99: Thunderstorm
-    
     if (code === 0 || code === 1) return <Sun className={`${className} text-amber-400`} />;
     if (code === 2 || code === 3) return <Cloud className={`${className} text-slate-400`} />;
-    if (code === 45 || code === 48) return <Cloud className={`${className} text-slate-400`} />; // Fog as cloud
+    if (code === 45 || code === 48) return <Cloud className={`${className} text-slate-400`} />;
     if (code >= 51 && code <= 67) return <CloudRain className={`${className} text-blue-400`} />;
     if (code >= 71 && code <= 77) return <CloudSnow className={`${className} text-sky-200`} />;
     if (code >= 80 && code <= 82) return <CloudRain className={`${className} text-blue-400`} />;
     if (code >= 85 && code <= 86) return <CloudSnow className={`${className} text-sky-200`} />;
     if (code >= 95) return <CloudRain className={`${className} text-purple-400`} />;
-    
     return <Sun className={`${className} text-amber-400`} />;
   };
 
@@ -186,24 +287,34 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
         >
+          {/* Weather Specific Overlay Animations */}
+          {animationMode === 'rain' && <RainEffect />}
+          {animationMode === 'snow' && <SnowEffect />}
+
           <img 
             src={destination.images[currentImageIdx]} 
             alt={destination.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 select-none"
+            className={`w-full h-full object-cover transition-transform duration-700 select-none ${animationMode === 'parallax' ? 'scale-110 ease-out' : 'group-hover:scale-105'}`}
+            style={animationMode === 'parallax' ? {
+              transform: `scale(1.1) translate(${parallaxOffset.x}px, ${parallaxOffset.y}px)`,
+              transition: 'transform 0.1s ease-out'
+            } : {}}
             draggable="false"
           />
           
           {/* Image Controls */}
           <button 
             onClick={prevImage}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block z-30"
           >
             <ChevronLeft size={20} />
           </button>
           <button 
             onClick={nextImage}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block z-30"
           >
             <ChevronRight size={20} />
           </button>
@@ -211,7 +322,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           {/* 10-Day Weather Forecast Widget (Compact) */}
           {forecast.length > 0 ? (
              <div 
-                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] bg-white/30 backdrop-blur-md rounded-xl p-1.5 shadow-lg border border-white/20 flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-10"
+                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] bg-white/30 backdrop-blur-md rounded-xl p-1.5 shadow-lg border border-white/20 flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-30"
                 style={{
                   maskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent), linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent)',
                   WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent), linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent)',
@@ -235,7 +346,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
              </div>
           ) : (
             // Fallback
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/20 pointer-events-none">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/20 pointer-events-none z-30">
               {getWeatherIcon(0)} 
               <span className="text-sm">{destination.weather.temp > 0 ? '+' : ''}{destination.weather.temp}°C</span>
               <span className="hidden sm:inline-block text-slate-500 font-normal border-l border-slate-200 pl-2 ml-0.5">
@@ -245,7 +356,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           )}
           
           {/* Dots indicator */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5 pointer-events-none">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5 pointer-events-none z-30">
               {destination.images.map((_, idx) => (
                   <div 
                       key={idx}
