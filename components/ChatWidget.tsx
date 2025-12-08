@@ -67,7 +67,7 @@ export const ChatWidget: React.FC = () => {
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col animate-fade-in-up h-[500px]">
+        <div className="mb-4 w-[calc(100vw-3rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col animate-fade-in-up h-[500px] max-h-[60vh] sm:max-h-[500px]">
           {/* Header */}
           <div className="bg-slate-900 p-4 flex justify-between items-center">
             <div className="flex items-center text-white">
@@ -120,12 +120,12 @@ export const ChatWidget: React.FC = () => {
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Задайте вопрос о горах..."
-              className="flex-1 px-4 py-2 bg-slate-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+              className="flex-1 px-4 py-2 bg-slate-100 text-slate-900 placeholder-slate-400 rounded-full text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50"
             />
             <button 
               onClick={handleSend}
               disabled={isLoading || !inputText.trim()}
-              className="p-2 bg-slate-900 text-white rounded-full hover:bg-sky-600 disabled:opacity-50 transition-colors"
+              className="p-2 bg-slate-900 text-white rounded-full hover:bg-sky-600 disabled:opacity-50 transition-colors flex-shrink-0"
             >
               <Send size={18} />
             </button>
