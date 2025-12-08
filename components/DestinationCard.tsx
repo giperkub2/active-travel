@@ -35,48 +35,6 @@ const VKIcon = () => (
 );
 
 // Weather Effect Components
-const RainEffect = () => {
-  // Generate random drops for a storm: more drops, faster speed, wind tilt
-  const drops = useMemo(() => {
-    // Increased count to 25 for "storm" density
-    return [...Array(25)].map((_, i) => {
-        // Varied sizes: some smaller fast ones, some heavy large ones
-        const width = Math.random() * 10 + 6; // 6px to 16px
-        // Elongated streaks for speed sensation
-        const height = width * (1.5 + Math.random() * 1.5); 
-        
-        return {
-            left: Math.random() * 100,
-            width, 
-            height,
-            delay: Math.random() * 3, // Less delay overlap for constant rain
-            duration: Math.random() * 1 + 0.8 // Faster: 0.8s to 1.8s
-        };
-    });
-  }, []);
-
-  return (
-    <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
-      {/* Stormy Overlay: Darkens the image to simulate storm clouds/lighting */}
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[0.5px]"></div>
-      
-      {drops.map((drop, i) => (
-        <div
-          key={i}
-          className="raindrop"
-          style={{
-            left: `${drop.left}%`,
-            width: `${drop.width}px`,
-            height: `${drop.height}px`,
-            animationDelay: `${drop.delay}s`,
-            animationDuration: `${drop.duration}s`
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
 const SnowEffect = () => {
   const flakes = useMemo(() => {
     return [...Array(30)].map((_, i) => ({
@@ -131,14 +89,11 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
   // Determine Animation Mode
   const animationMode = useMemo(() => {
     const code = currentWeatherCode;
-    // Rain: 51-67, 80-82, 95-99
-    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95) return 'rain';
     // Snow: 71-77, 85-86
     if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return 'snow';
-    // Clear/Parallax: 0, 1, 2, 3 (Including cloudy as calm/clear for parallax effect)
-    if (code <= 3 || code === 45 || code === 48) return 'parallax';
     
-    return 'none';
+    // Default to parallax (clear weather behavior) for everything else, including rain
+    return 'parallax';
   }, [currentWeatherCode]);
 
   // Swipe state
@@ -299,7 +254,6 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           onMouseLeave={handleMouseLeave}
         >
           {/* Weather Specific Overlay Animations */}
-          {animationMode === 'rain' && <RainEffect />}
           {animationMode === 'snow' && <SnowEffect />}
 
           <img 
@@ -327,37 +281,31 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
             <ChevronRight size={20} />
           </button>
 
-          {/* 10-Day Weather Forecast Widget (Compact) */}
+          {/* 10-Day Weather Forecast Widget (Volumetric Glass Style) */}
           {forecast.length > 0 ? (
              <div 
-                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] bg-white/30 backdrop-blur-md rounded-xl p-1.5 shadow-lg border border-white/20 flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-30"
-                style={{
-                  maskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent), linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent)',
-                  WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent), linear-gradient(to right, transparent, black 10px, black calc(100% - 10px), transparent)',
-                  maskComposite: 'intersect',
-                  WebkitMaskComposite: 'source-in'
-                }}
+                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-30 p-2.5 rounded-[2rem] bg-gradient-to-b from-white/20 to-white/5 backdrop-blur-xl border border-white/30 shadow-[inset_0_4px_8px_rgba(255,255,255,0.6),inset_0_-4px_8px_rgba(0,0,0,0.1),0_8px_20px_rgba(0,0,0,0.2)]"
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
              >
                 {forecast.map((day, idx) => (
                   <div key={idx} className="flex flex-col items-center justify-between min-w-[34px] text-center">
-                    <span className="text-[9px] uppercase font-bold text-slate-500 leading-none mb-0.5">{day.dayOfWeek}</span>
-                    <span className="text-[8px] text-slate-400 leading-none mb-0.5">{day.dayNumber}</span>
+                    <span className="text-[9px] uppercase font-bold text-slate-600 leading-none mb-0.5">{day.dayOfWeek}</span>
+                    <span className="text-[8px] text-slate-500 leading-none mb-0.5">{day.dayNumber}</span>
                     <div className="my-0.5">
                       {getWeatherIcon(day.code, "w-3.5 h-3.5")}
                     </div>
-                    <span className="text-[10px] font-bold text-slate-700 leading-none">{day.tempMax > 0 ? '+' : ''}{day.tempMax}°</span>
+                    <span className="text-[10px] font-bold text-slate-800 leading-none">{day.tempMax > 0 ? '+' : ''}{day.tempMax}°</span>
                   </div>
                 ))}
              </div>
           ) : (
             // Fallback
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/20 pointer-events-none z-30">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none z-30 px-5 py-2.5 rounded-[2rem] bg-gradient-to-b from-white/20 to-white/5 backdrop-blur-xl border border-white/30 shadow-[inset_0_4px_8px_rgba(255,255,255,0.6),inset_0_-4px_8px_rgba(0,0,0,0.1),0_8px_20px_rgba(0,0,0,0.2)] text-xs font-bold text-slate-800">
               {getWeatherIcon(0)} 
               <span className="text-sm">{destination.weather.temp > 0 ? '+' : ''}{destination.weather.temp}°C</span>
-              <span className="hidden sm:inline-block text-slate-500 font-normal border-l border-slate-200 pl-2 ml-0.5">
+              <span className="hidden sm:inline-block text-slate-600 font-normal border-l border-slate-400 pl-2 ml-0.5">
                 {destination.weather.condition}
               </span>
             </div>
