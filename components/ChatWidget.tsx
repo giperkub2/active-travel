@@ -137,13 +137,15 @@ export const ChatWidget: React.FC = () => {
         </div>
       )}
 
-      {/* Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="group flex items-center justify-center w-14 h-14 bg-sky-600 text-white rounded-full shadow-lg hover:bg-sky-700 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-sky-300"
-      >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} className="group-hover:animate-pulse" />}
-      </button>
+      {/* Toggle Button - Only show when chat is closed */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="group flex items-center justify-center w-14 h-14 bg-sky-600 text-white rounded-full shadow-lg hover:bg-sky-700 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-sky-300"
+        >
+          <MessageSquare size={24} className="group-hover:animate-pulse" />
+        </button>
+      )}
     </div>
   );
 };
