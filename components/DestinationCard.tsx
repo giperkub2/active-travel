@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Destination, Weather } from '../types';
-import { Clock, Mountain, ChevronLeft, ChevronRight, CheckCircle, Sun, Cloud, CloudRain, CloudSnow } from 'lucide-react';
+import { Clock, Mountain, ChevronLeft, ChevronRight, CheckCircle, Sun, Cloud, Droplet, Snowflake } from 'lucide-react';
 
 interface DestinationCardProps {
   destination: Destination;
@@ -229,11 +229,11 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     if (code === 0 || code === 1) return <Sun className={`${className} text-amber-400`} />;
     if (code === 2 || code === 3) return <Cloud className={`${className} text-slate-400`} />;
     if (code === 45 || code === 48) return <Cloud className={`${className} text-slate-400`} />;
-    if (code >= 51 && code <= 67) return <CloudRain className={`${className} text-blue-400`} />;
-    if (code >= 71 && code <= 77) return <CloudSnow className={`${className} text-sky-200`} />;
-    if (code >= 80 && code <= 82) return <CloudRain className={`${className} text-blue-400`} />;
-    if (code >= 85 && code <= 86) return <CloudSnow className={`${className} text-sky-200`} />;
-    if (code >= 95) return <CloudRain className={`${className} text-purple-400`} />;
+    if (code >= 51 && code <= 67) return <Droplet className={`${className} text-blue-400`} />;
+    if (code >= 71 && code <= 77) return <Snowflake className={`${className} text-sky-200`} />;
+    if (code >= 80 && code <= 82) return <Droplet className={`${className} text-blue-400`} />;
+    if (code >= 85 && code <= 86) return <Snowflake className={`${className} text-sky-200`} />;
+    if (code >= 95) return <Droplet className={`${className} text-purple-400`} />;
     return <Sun className={`${className} text-amber-400`} />;
   };
 
@@ -284,7 +284,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           {/* 10-Day Weather Forecast Widget (Volumetric Glass Style) */}
           {forecast.length > 0 ? (
              <div 
-                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-30 p-2.5 rounded-[2rem] bg-gradient-to-b from-white/20 to-white/5 backdrop-blur-xl border border-white/30 shadow-[inset_0_4px_8px_rgba(255,255,255,0.6),inset_0_-4px_8px_rgba(0,0,0,0.1),0_8px_20px_rgba(0,0,0,0.2)]"
+                className="absolute top-4 left-1/2 -translate-x-1/2 max-w-[90%] sm:max-w-[200px] flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto z-30 p-2.5 rounded-[2rem] bg-gradient-to-b from-white/30 to-white/10 backdrop-blur-xl border border-white/30 shadow-[inset_0_4px_8px_rgba(255,255,255,0.6),inset_0_-4px_8px_rgba(0,0,0,0.1),0_8px_20px_rgba(0,0,0,0.2)]"
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -302,7 +302,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
              </div>
           ) : (
             // Fallback
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none z-30 px-5 py-2.5 rounded-[2rem] bg-gradient-to-b from-white/20 to-white/5 backdrop-blur-xl border border-white/30 shadow-[inset_0_4px_8px_rgba(255,255,255,0.6),inset_0_-4px_8px_rgba(0,0,0,0.1),0_8px_20px_rgba(0,0,0,0.2)] text-xs font-bold text-slate-800">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none z-30 px-5 py-2.5 rounded-[2rem] bg-gradient-to-b from-white/30 to-white/10 backdrop-blur-xl border border-white/30 shadow-[inset_0_4px_8px_rgba(255,255,255,0.6),inset_0_-4px_8px_rgba(0,0,0,0.1),0_8px_20px_rgba(0,0,0,0.2)] text-xs font-bold text-slate-800">
               {getWeatherIcon(0)} 
               <span className="text-sm">{destination.weather.temp > 0 ? '+' : ''}{destination.weather.temp}°C</span>
               <span className="hidden sm:inline-block text-slate-600 font-normal border-l border-slate-400 pl-2 ml-0.5">
