@@ -1,11 +1,19 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Destination, Weather } from '../types';
-import { Clock, Mountain, ChevronLeft, ChevronRight, CheckCircle, Share2, Sun, Cloud, CloudRain, CloudSnow } from 'lucide-react';
+import { Clock, Mountain, ChevronLeft, ChevronRight, CheckCircle, Sun, Cloud, CloudRain, CloudSnow } from 'lucide-react';
 
 interface DestinationCardProps {
   destination: Destination;
   onBook: (id: string) => void;
+}
+
+interface DailyForecast {
+  date: string; // ISO string
+  dayOfWeek: string;
+  dayNumber: string;
+  tempMax: number;
+  code: number;
 }
 
 const TelegramIcon = () => (
@@ -29,7 +37,7 @@ const VKIcon = () => (
 export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, onBook }) => {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [currentWeather, setCurrentWeather] = useState<Weather>(destination.weather);
+  const [forecast, setForecast] = useState<DailyForecast[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Swipe state
@@ -55,45 +63,40 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     return () => observer.disconnect();
   }, []);
 
-  // Fetch real-time weather
+  // Fetch real-time weather forecast (5 days)
   useEffect(() => {
     if (destination.coordinates) {
       const fetchWeather = async () => {
         try {
+          // Fetching daily forecast for 5 days
           const res = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${destination.coordinates.lat}&longitude=${destination.coordinates.lng}&current_weather=true`
+            `https://api.open-meteo.com/v1/forecast?latitude=${destination.coordinates.lat}&longitude=${destination.coordinates.lng}&daily=weathercode,temperature_2m_max&timezone=auto&forecast_days=5`
           );
           if (!res.ok) throw new Error('Failed to fetch weather');
           const data = await res.json();
           
-          if (data.current_weather) {
-            setCurrentWeather({
-              temp: Math.round(data.current_weather.temperature),
-              condition: getWeatherDescription(data.current_weather.weathercode)
+          if (data.daily) {
+            const dailyData: DailyForecast[] = data.daily.time.map((dateStr: string, index: number) => {
+              const date = new Date(dateStr);
+              return {
+                date: dateStr,
+                dayOfWeek: date.toLocaleDateString('ru-RU', { weekday: 'short' }),
+                dayNumber: date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'numeric' }),
+                tempMax: Math.round(data.daily.temperature_2m_max[index]),
+                code: data.daily.weathercode[index]
+              };
             });
+            setForecast(dailyData);
           }
         } catch (error) {
           console.error('Error fetching weather:', error);
-          // Fallback to static data is already set in initial state
+          // Fallback handled by empty forecast array (UI will just not show or show static)
         }
       };
       
       fetchWeather();
     }
   }, [destination.coordinates]);
-
-  const getWeatherDescription = (code: number): string => {
-    // WMO Weather interpretation codes
-    if (code === 0) return 'Ясно';
-    if (code >= 1 && code <= 3) return 'Облачно';
-    if (code === 45 || code === 48) return 'Туман';
-    if (code >= 51 && code <= 67) return 'Дождь';
-    if (code >= 71 && code <= 77) return 'Снег';
-    if (code >= 80 && code <= 82) return 'Ливень';
-    if (code >= 85 && code <= 86) return 'Снег';
-    if (code >= 95) return 'Гроза';
-    return 'Ясно';
-  };
 
   const nextImage = (e?: React.MouseEvent | React.TouchEvent) => {
     e?.stopPropagation();
@@ -147,14 +150,27 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     window.open(shareUrl, '_blank');
   };
 
-  const getWeatherIcon = (condition: string) => {
-    const lower = condition.toLowerCase();
-    if (lower.includes('солн') || lower.includes('ясно')) return <Sun className="w-4 h-4 text-amber-500" />;
-    if (lower.includes('дождь') || lower.includes('ливень')) return <CloudRain className="w-4 h-4 text-blue-500" />;
-    if (lower.includes('снег')) return <CloudSnow className="w-4 h-4 text-sky-300" />;
-    if (lower.includes('облач') || lower.includes('туман')) return <Cloud className="w-4 h-4 text-slate-500" />;
-    if (lower.includes('гроз')) return <CloudRain className="w-4 h-4 text-purple-500" />;
-    return <Sun className="w-4 h-4 text-amber-500" />;
+  const getWeatherIcon = (code: number, className: string = "w-4 h-4") => {
+    // WMO codes
+    // 0: Clear sky
+    // 1, 2, 3: Mainly clear, partly cloudy, and overcast
+    // 45, 48: Fog
+    // 51, 53, 55: Drizzle
+    // 61, 63, 65: Rain
+    // 71, 73, 75: Snow
+    // 80, 81, 82: Rain showers
+    // 95, 96, 99: Thunderstorm
+    
+    if (code === 0 || code === 1) return <Sun className={`${className} text-amber-400`} />;
+    if (code === 2 || code === 3) return <Cloud className={`${className} text-slate-400`} />;
+    if (code === 45 || code === 48) return <Cloud className={`${className} text-slate-400`} />; // Fog as cloud
+    if (code >= 51 && code <= 67) return <CloudRain className={`${className} text-blue-400`} />;
+    if (code >= 71 && code <= 77) return <CloudSnow className={`${className} text-sky-200`} />;
+    if (code >= 80 && code <= 82) return <CloudRain className={`${className} text-blue-400`} />;
+    if (code >= 85 && code <= 86) return <CloudSnow className={`${className} text-sky-200`} />;
+    if (code >= 95) return <CloudRain className={`${className} text-purple-400`} />;
+    
+    return <Sun className={`${className} text-amber-400`} />;
   };
 
   return (
@@ -178,7 +194,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
             draggable="false"
           />
           
-          {/* Image Controls - Hidden on mobile (sm:block) because we have swipe */}
+          {/* Image Controls */}
           <button 
             onClick={prevImage}
             className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block"
@@ -192,14 +208,30 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
             <ChevronRight size={20} />
           </button>
 
-          {/* Weather Widget */}
-          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/50 pointer-events-none">
-            {getWeatherIcon(currentWeather.condition)}
-            <span className="text-sm">{currentWeather.temp > 0 ? '+' : ''}{currentWeather.temp}°C</span>
-            <span className="hidden sm:inline-block text-slate-500 font-normal border-l border-slate-200 pl-2 ml-0.5">
-              {currentWeather.condition}
-            </span>
-          </div>
+          {/* 5-Day Weather Forecast Widget */}
+          {forecast.length > 0 ? (
+             <div className="absolute top-4 left-4 right-4 sm:right-auto bg-white/80 backdrop-blur-md rounded-xl p-2 shadow-lg border border-white/50 flex justify-between sm:justify-start sm:gap-3 overflow-x-auto hide-scrollbar pointer-events-none">
+                {forecast.map((day, idx) => (
+                  <div key={idx} className="flex flex-col items-center justify-between min-w-[40px] text-center">
+                    <span className="text-[10px] uppercase font-bold text-slate-500 leading-none mb-1">{day.dayOfWeek}</span>
+                    <span className="text-[9px] text-slate-400 leading-none mb-1">{day.dayNumber}</span>
+                    <div className="my-0.5">
+                      {getWeatherIcon(day.code, "w-4 h-4")}
+                    </div>
+                    <span className="text-xs font-bold text-slate-700 leading-none">{day.tempMax > 0 ? '+' : ''}{day.tempMax}°</span>
+                  </div>
+                ))}
+             </div>
+          ) : (
+            // Fallback to single static weather if API fails
+            <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/50 pointer-events-none">
+              {getWeatherIcon(0)} 
+              <span className="text-sm">{destination.weather.temp > 0 ? '+' : ''}{destination.weather.temp}°C</span>
+              <span className="hidden sm:inline-block text-slate-500 font-normal border-l border-slate-200 pl-2 ml-0.5">
+                {destination.weather.condition}
+              </span>
+            </div>
+          )}
           
           {/* Dots indicator */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5 pointer-events-none">
