@@ -32,6 +32,11 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
   const [currentWeather, setCurrentWeather] = useState<Weather>(destination.weather);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Swipe state
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -90,14 +95,37 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     return 'Ясно';
   };
 
-  const nextImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const nextImage = (e?: React.MouseEvent | React.TouchEvent) => {
+    e?.stopPropagation();
     setCurrentImageIdx((prev) => (prev + 1) % destination.images.length);
   };
 
-  const prevImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const prevImage = (e?: React.MouseEvent | React.TouchEvent) => {
+    e?.stopPropagation();
     setCurrentImageIdx((prev) => (prev - 1 + destination.images.length) % destination.images.length);
+  };
+
+  // Touch handlers for swipe
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) {
+      nextImage();
+    } else if (isRightSwipe) {
+      prevImage();
+    }
   };
 
   const handleShare = (platform: 'telegram' | 'whatsapp' | 'vk') => {
@@ -137,29 +165,35 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     >
       <div className="group bg-white rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-slate-100 flex flex-col h-full">
         {/* Image Gallery Area */}
-        <div className="relative h-64 sm:h-72 overflow-hidden bg-slate-200">
+        <div 
+          className="relative h-64 sm:h-72 overflow-hidden bg-slate-200 touch-pan-y"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <img 
             src={destination.images[currentImageIdx]} 
             alt={destination.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 select-none"
+            draggable="false"
           />
           
-          {/* Image Controls */}
+          {/* Image Controls - Hidden on mobile (sm:block) because we have swipe */}
           <button 
             onClick={prevImage}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block"
           >
             <ChevronLeft size={20} />
           </button>
           <button 
             onClick={nextImage}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block"
           >
             <ChevronRight size={20} />
           </button>
 
           {/* Weather Widget */}
-          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/50">
+          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 shadow-lg flex items-center gap-2 border border-white/50 pointer-events-none">
             {getWeatherIcon(currentWeather.condition)}
             <span className="text-sm">{currentWeather.temp > 0 ? '+' : ''}{currentWeather.temp}°C</span>
             <span className="hidden sm:inline-block text-slate-500 font-normal border-l border-slate-200 pl-2 ml-0.5">
@@ -168,7 +202,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
           </div>
           
           {/* Dots indicator */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5 pointer-events-none">
               {destination.images.map((_, idx) => (
                   <div 
                       key={idx}
