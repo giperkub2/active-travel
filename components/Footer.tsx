@@ -37,7 +37,12 @@ export const Footer: React.FC = () => {
         <div>
           <h4 className="text-lg font-bold text-white mb-4">Следите за нами</h4>
           <div className="flex space-x-4 mb-6">
-            <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors text-white backdrop-blur-sm">
+            <a 
+              href="https://www.instagram.com/activetravel.krd/?r=nametag" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors text-white backdrop-blur-sm"
+            >
               <Instagram size={20} />
             </a>
             <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors text-white backdrop-blur-sm">

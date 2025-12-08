@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ArrowDown, MapPin } from 'lucide-react';
+import { LOGO_URL } from '../constants';
 
 interface HeroProps {
   onExplore: () => void;
@@ -19,9 +20,9 @@ export const Hero: React.FC<HeroProps> = ({ onExplore }) => {
           
           <div className="w-full px-4 mb-4 flex justify-center">
             <img 
-              src="https://sun9-84.userapi.com/s/v1/ig2/sO06I8kDb8j63jDF8y5xTwK3xxr2KuFmVHJSnghSR20lApJh6nIb1KGjCLIRYloFa54Rb-4WPe-Cgts8KR1l4_sb.jpg?quality=95&as=32x16,48x24,72x36,108x54,160x80,240x120,360x180,480x240,540x270,640x320,720x360,1080x540,1280x640,1440x720,2560x1280&from=bu&cs=2560x0"
+              src={LOGO_URL}
               alt="Active Travel"
-              className="w-full max-w-md h-auto object-contain mix-blend-screen rounded-full contrast-125 brightness-110"
+              className="w-64 h-64 sm:w-80 sm:h-80 object-contain drop-shadow-2xl animate-fade-in"
             />
           </div>
           

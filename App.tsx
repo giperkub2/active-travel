@@ -6,7 +6,7 @@ import { BookingModal } from './components/BookingModal';
 import { ImportantInfo } from './components/ImportantInfo';
 import { ChatWidget } from './components/ChatWidget';
 import { Footer } from './components/Footer';
-import { DESTINATIONS } from './constants';
+import { DESTINATIONS, LOGO_URL } from './constants';
 import { Destination } from './types';
 
 const App: React.FC = () => {
@@ -68,9 +68,9 @@ const App: React.FC = () => {
       <nav className="absolute top-0 w-full z-50 p-6 flex justify-between items-center">
         <div className="h-12 sm:h-14">
           <img 
-            src="https://sun9-84.userapi.com/s/v1/ig2/sO06I8kDb8j63jDF8y5xTwK3xxr2KuFmVHJSnghSR20lApJh6nIb1KGjCLIRYloFa54Rb-4WPe-Cgts8KR1l4_sb.jpg?quality=95&as=32x16,48x24,72x36,108x54,160x80,240x120,360x180,480x240,540x270,640x320,720x360,1080x540,1280x640,1440x720,2560x1280&from=bu&cs=2560x0" 
+            src={LOGO_URL} 
             alt="Active Travel" 
-            className="h-full w-auto object-contain rounded-full mix-blend-screen contrast-125 brightness-110"
+            className="h-full w-auto object-contain drop-shadow-md"
           />
         </div>
         <a 

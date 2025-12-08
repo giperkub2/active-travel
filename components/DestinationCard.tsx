@@ -31,11 +31,6 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
   const [isVisible, setIsVisible] = useState(false);
   const [currentWeather, setCurrentWeather] = useState<Weather>(destination.weather);
   const cardRef = useRef<HTMLDivElement>(null);
-  
-  // Touch handling state
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const minSwipeDistance = 50;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -95,37 +90,14 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     return 'Ясно';
   };
 
-  const nextImage = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setCurrentImageIdx((prev) => (prev + 1) % destination.images.length);
   };
 
-  const prevImage = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setCurrentImageIdx((prev) => (prev - 1 + destination.images.length) % destination.images.length);
-  };
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) {
-      setCurrentImageIdx((prev) => (prev + 1) % destination.images.length);
-    }
-    if (isRightSwipe) {
-      setCurrentImageIdx((prev) => (prev - 1 + destination.images.length) % destination.images.length);
-    }
   };
 
   const handleShare = (platform: 'telegram' | 'whatsapp' | 'vk') => {
@@ -165,31 +137,23 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({ destination, o
     >
       <div className="group bg-white rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-slate-100 flex flex-col h-full">
         {/* Image Gallery Area */}
-        <div 
-          className="relative h-64 sm:h-72 overflow-hidden bg-slate-200 touch-pan-y"
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-        >
+        <div className="relative h-64 sm:h-72 overflow-hidden bg-slate-200">
           <img 
             src={destination.images[currentImageIdx]} 
             alt={destination.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 select-none"
-            draggable={false}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           
           {/* Image Controls */}
           <button 
             onClick={prevImage}
             className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Previous image"
           >
             <ChevronLeft size={20} />
           </button>
           <button 
             onClick={nextImage}
             className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Next image"
           >
             <ChevronRight size={20} />
           </button>
