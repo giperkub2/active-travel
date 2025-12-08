@@ -41,7 +41,11 @@ export const ChatWidget: React.FC = () => {
     setIsLoading(true);
 
     // Prepare history for API
-    const history = messages.map(m => ({ role: m.role, text: m.text }));
+    // Filter out the local welcome message to ensure the history starts with a user turn if present,
+    // or is empty for the first request. This prevents "Model turn first" validation errors.
+    const history = messages
+      .filter(m => m.id !== 'welcome')
+      .map(m => ({ role: m.role, text: m.text }));
     
     const responseText = await sendMessageToGemini(userMsg.text, history);
 

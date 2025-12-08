@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { SYSTEM_INSTRUCTION } from '../constants';
 
@@ -6,7 +7,12 @@ let aiClient: GoogleGenAI | null = null;
 const getClient = () => {
   if (!aiClient) {
     // Use process.env.API_KEY as required
-    aiClient = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    // Ensure we don't throw immediately if key is missing during init, but handled in call
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        console.error("API_KEY is missing");
+    }
+    aiClient = new GoogleGenAI({ apiKey: apiKey || 'dummy-key-to-prevent-crash' });
   }
   return aiClient;
 };
@@ -17,13 +23,8 @@ export const sendMessageToGemini = async (
 ): Promise<string> => {
   try {
     const ai = getClient();
-    const model = ai.models;
-
-    // Format history for the API
-    // Note: The new SDK suggests using 'chats' for conversational history, 
-    // but for single-turn stateless or simple message passing, we can construct contents manually or use a chat session.
-    // Here we will use a chat session for better context retention.
     
+    // Create chat session
     const chat = ai.chats.create({
         model: 'gemini-2.5-flash',
         config: {
@@ -40,6 +41,7 @@ export const sendMessageToGemini = async (
     return response.text || "Извините, я сейчас любуюсь горами и не могу ответить. Попробуйте позже.";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "Произошла ошибка связи с базой данных. Пожалуйста, проверьте соединение.";
+    // More user-friendly error message, not "database" error
+    return "Простите, сейчас плохая связь с горами. Пожалуйста, попробуйте задать вопрос через минуту.";
   }
 };
