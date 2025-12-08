@@ -13,12 +13,12 @@ export const Hero: React.FC<HeroProps> = ({ onExplore }) => {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 w-full">
         <div className="animate-fade-in-up flex flex-col items-center w-full max-w-5xl">
-          <div className="flex items-center justify-center space-x-2 text-sky-400 font-medium tracking-wider uppercase text-sm sm:text-base mb-2">
+          <div className="flex items-center justify-center space-x-2 text-sky-400 font-medium tracking-wider uppercase text-sm sm:text-base mb-4">
             <MapPin className="w-5 h-5" />
             <span>Выезд из Краснодара</span>
           </div>
           
-          <div className="w-full px-4 mb-4 flex justify-center">
+          <div className="w-full px-4 flex justify-center">
             <img 
               src={LOGO_URL}
               alt="Active Travel"
@@ -26,14 +26,14 @@ export const Hero: React.FC<HeroProps> = ({ onExplore }) => {
             />
           </div>
           
-          <p className="max-w-2xl mx-auto text-lg sm:text-xl md:text-2xl text-slate-100 font-light leading-relaxed drop-shadow-md mt-4">
+          <p className="max-w-2xl mx-auto text-lg sm:text-xl md:text-2xl text-slate-100 font-light leading-relaxed drop-shadow-md my-6 sm:my-8 px-4">
             Авторские туры в горы. Открой для себя величие вершин, чистоту рек и древнюю историю.
           </p>
 
-          <div className="pt-8">
+          <div>
             <button 
               onClick={onExplore}
-              className="group relative inline-flex items-center justify-center px-6 py-3 text-base -translate-y-full font-semibold text-white transition-all duration-200 bg-sky-600 rounded-full hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600 shadow-lg hover:shadow-sky-500/30"
+              className="group relative inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white transition-all duration-200 bg-sky-600 rounded-full hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-600 shadow-lg hover:shadow-sky-500/30"
             >
               Выбрать путешествие
               <ArrowDown className="ml-2 w-4 h-4 group-hover:translate-y-1 transition-transform" />
