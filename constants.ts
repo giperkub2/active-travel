@@ -1,8 +1,8 @@
 
 import { Destination } from './types';
 
-// ВАЖНО: Добавлен параметр ?v=1 для сброса кэша на мобильных устройствах
-export const LOGO_URL = 'https://raw.githubusercontent.com/giperkub2/active-travel/main/122740-removebg-preview.png?v=1';
+// Ссылка на логотип из конкретного коммита (3e57e7f), чтобы избежать кэширования и использовать актуальную версию
+export const LOGO_URL = 'https://raw.githubusercontent.com/giperkub2/active-travel/3e57e7f/122740-removebg-preview.png';
 
 export const DESTINATIONS: Destination[] = [
   {

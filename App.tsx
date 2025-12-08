@@ -64,13 +64,12 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* Header/Nav Overlay - Reduced padding on mobile */}
+      {/* Header/Nav Overlay */}
       <nav className="absolute top-0 w-full z-50 p-4 sm:p-6 flex justify-between items-center">
         <div className="h-12 sm:h-14">
           <img 
             src={LOGO_URL} 
             alt="Active Travel" 
-            loading="eager"
             className="h-full w-auto object-contain drop-shadow-md"
           />
         </div>

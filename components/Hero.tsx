@@ -22,7 +22,6 @@ export const Hero: React.FC<HeroProps> = ({ onExplore }) => {
             <img 
               src={LOGO_URL}
               alt="Active Travel"
-              loading="eager"
               className="w-64 h-64 sm:w-80 sm:h-80 max-w-full object-contain drop-shadow-2xl animate-fade-in"
             />
           </div>
