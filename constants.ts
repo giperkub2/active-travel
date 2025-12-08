@@ -1,8 +1,8 @@
 
 import { Destination } from './types';
 
-// ВАЖНО: Замените эту ссылку на прямую ссылку вашего нового логотипа (формат PNG с прозрачным фоном)
-export const LOGO_URL = 'https://raw.githubusercontent.com/giperkub2/active-travel/main/122740-removebg-preview.png';
+// ВАЖНО: Добавлен параметр ?v=1 для сброса кэша на мобильных устройствах
+export const LOGO_URL = 'https://raw.githubusercontent.com/giperkub2/active-travel/main/122740-removebg-preview.png?v=1';
 
 export const DESTINATIONS: Destination[] = [
   {
