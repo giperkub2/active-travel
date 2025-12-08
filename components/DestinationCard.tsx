@@ -36,21 +36,30 @@ const VKIcon = () => (
 
 // Weather Effect Components
 const RainEffect = () => {
-  // Generate random drops
+  // Generate random drops for a storm: more drops, faster speed, wind tilt
   const drops = useMemo(() => {
-    return [...Array(15)].map((_, i) => ({
-      left: Math.random() * 100,
-      width: Math.random() * 6 + 4, // Slightly smaller width for drop shape
-      height: Math.random() * 6 + 4, 
-      delay: Math.random() * 2,
-      duration: (Math.random() * 2 + 3) * 1.5 // Increased duration (slower)
-    }));
+    // Increased count to 25 for "storm" density
+    return [...Array(25)].map((_, i) => {
+        // Varied sizes: some smaller fast ones, some heavy large ones
+        const width = Math.random() * 10 + 6; // 6px to 16px
+        // Elongated streaks for speed sensation
+        const height = width * (1.5 + Math.random() * 1.5); 
+        
+        return {
+            left: Math.random() * 100,
+            width, 
+            height,
+            delay: Math.random() * 3, // Less delay overlap for constant rain
+            duration: Math.random() * 1 + 0.8 // Faster: 0.8s to 1.8s
+        };
+    });
   }, []);
 
   return (
     <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
-      {/* Light Blur backdrop to simulate looking through wet glass */}
-      <div className="absolute inset-0 backdrop-blur-[1px] opacity-30"></div>
+      {/* Stormy Overlay: Darkens the image to simulate storm clouds/lighting */}
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[0.5px]"></div>
+      
       {drops.map((drop, i) => (
         <div
           key={i}
